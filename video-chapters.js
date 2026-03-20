@@ -1,5 +1,5 @@
 /**
- * Video Chapters v1.1.3 – lightweight runtime
+ * Video Chapters v1.1.4 – lightweight runtime
  * (c) Made by Dave Group Ltd
  * https://github.com/madebydave/video-chapters
  *
@@ -103,8 +103,12 @@
     // Position is set dynamically by positionPopup() on open — CSS just sets a default
     return fi
       + '.vcp-wrap{position:relative;display:inline-block;' + fr + '}'
-      + '.vcp-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid ' + c.border + ';border-radius:6px;background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:' + c.title + ';' + fr + 'transition:background .15s}'
-      + '.vcp-btn:hover{background:' + c.hover + '}'
+      + '.vcp-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid ' + c.border + ';border-radius:6px;background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:' + c.title + ';' + fr + 'transition:background .15s,transform .15s ease,box-shadow .15s ease}'
+      + '.vcp-btn:hover{background:' + c.hover + ';box-shadow:0 2px 8px rgba(0,0,0,.08)}'
+      + '.vcp-btn:active{transform:scale(.95)}'
+      + '.vcp-btn.vcp-open{background:' + c.hover + ';box-shadow:0 1px 4px rgba(0,0,0,.1)}'
+      + '.vcp-btn .vcp-icon{transition:transform .3s cubic-bezier(.32,.72,0,1)}'
+      + '.vcp-btn.vcp-open .vcp-icon{transform:rotate(90deg)}'
       + '.vcp-btn:focus-visible{outline:2px solid ' + c.accent + ';outline-offset:2px}'
       + '.vcp-popup{display:flex;flex-direction:column;position:absolute;top:calc(100% + 8px);right:0;width:' + cfg.popupWidth + 'px;max-width:calc(100vw - 24px);max-height:400px;overflow:hidden;background:#fff;border:1px solid ' + c.border + ';border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.12);z-index:100;opacity:0;transform:scale(.96) translateY(-4px);pointer-events:none;transition:opacity .2s ease,transform .2s ease}'
       + '.vcp-popup.open{opacity:1;transform:scale(1) translateY(0);pointer-events:auto}'
@@ -175,8 +179,8 @@
     var c = cfg.colors;
     var valid = cfg.chapters.filter(function (ch) { return ch.t && ch.title; });
     var btnContent;
-    if (cfg.btnStyle === 'icon') btnContent = menuSvg(20, c.title);
-    else if (cfg.btnStyle === 'icon-text') btnContent = menuSvg(16, c.title) + ' <span>' + esc(cfg.heading) + '</span>';
+    if (cfg.btnStyle === 'icon') btnContent = '<span class="vcp-icon">' + menuSvg(20, c.title) + '</span>';
+    else if (cfg.btnStyle === 'icon-text') btnContent = '<span class="vcp-icon">' + menuSvg(16, c.title) + '</span> <span>' + esc(cfg.heading) + '</span>';
     else btnContent = '<span>' + esc(cfg.heading) + '</span>';
 
     var rows = valid.map(function (ch) {
@@ -257,6 +261,7 @@
 
     function openPopup() {
       popup.classList.add('open');
+      btn.classList.add('vcp-open');
       btn.setAttribute('aria-expanded', 'true');
       positionPopup(btn, popup, cfg);
       if (window.innerWidth <= 480) {
@@ -267,6 +272,7 @@
 
     function closePopup() {
       popup.classList.remove('open');
+      btn.classList.remove('vcp-open');
       btn.setAttribute('aria-expanded', 'false');
       backdrop.style.opacity = '0';
       setTimeout(function() { backdrop.style.display = 'none'; }, 300);
