@@ -1,5 +1,5 @@
 /**
- * Video Chapters v1.1.1 – lightweight runtime
+ * Video Chapters v1.1.2 – lightweight runtime
  * (c) Made by Dave Group Ltd
  * https://github.com/madebydave/video-chapters
  *
@@ -46,6 +46,7 @@
       hover: 'hsl(0,0%,96%)'
     },
     // Inline-only
+    maxWidth: 0,           // 0 = no constraint
     borderWidth: 1,
     borderRadius: 6,
     padding: '1.25em',
@@ -122,15 +123,16 @@
       + '.vcp-info{display:flex;flex-direction:column;gap:1px}'
       + '.vcp-title{font-weight:600;font-size:13px;color:' + c.title + '}'
       + '.vcp-desc{font-size:' + cfg.descSize + ';color:' + c.desc + ';line-height:1.4}'
-      + '@media(max-width:480px){.vcp-popup{left:0!important;right:auto!important;width:calc(100vw - 24px)!important}.vcp-ch{padding:10px 6px}}';
+      + '@media(max-width:480px){.vcp-popup{position:fixed!important;bottom:0!important;top:auto!important;left:0!important;right:0!important;width:100vw!important;max-width:100vw!important;max-height:60vh!important;border-radius:12px 12px 0 0!important;box-shadow:0 -4px 30px rgba(0,0,0,.15)}.vcp-ch{padding:10px 6px}}';
   }
 
   function buildInlineCSS(c, cfg) {
     var fi = fontImport(cfg.font), fr = fontRule(cfg.font);
     var div = cfg.dividerStyle === 'none' ? 'none' : cfg.dividerStyle === 'dashed' ? '.5px dashed rgba(128,128,128,.3)' : '.5px solid rgba(128,128,128,.15)';
 
+    var mw = cfg.maxWidth > 0 ? 'max-width:' + cfg.maxWidth + 'px;' : '';
     return fi
-      + '.video-chapters{' + fr + 'border:' + (cfg.borderWidth > 0 ? cfg.borderWidth + 'px solid ' + c.border : 'none') + ';border-radius:' + cfg.borderRadius + 'px;padding:' + (cfg.borderWidth > 0 ? cfg.padding : '0') + '}'
+      + '.video-chapters{' + mw + fr + 'border:' + (cfg.borderWidth > 0 ? cfg.borderWidth + 'px solid ' + c.border : 'none') + ';border-radius:' + cfg.borderRadius + 'px;padding:' + (cfg.borderWidth > 0 ? cfg.padding : '0') + '}'
       + '.video-chapters h4{margin:0 0 1em;font-size:' + cfg.headingSize + ';color:' + c.title + ';font-weight:600}'
       + '.chapter{display:flex;gap:14px;padding:10px 12px;border-radius:6px;cursor:pointer;transition:background .2s;align-items:flex-start;border-bottom:' + div + '}'
       + '.chapter:last-child{border-bottom:none}'
@@ -163,8 +165,9 @@
     return '.course-item{overflow:visible!important}'
       + '.course-item__lesson-content{overflow:visible!important}'
       + '.content-wrapper{overflow:visible!important}'
-      + '.vcb-injected-wrap{display:flex;justify-content:flex-end;padding:6px 16px 0 0;margin-top:-25px;position:relative;z-index:999999!important}'
-      + '.vcb-injected-wrap .vcp-popup{z-index:999999}';
+      + '.vcb-injected-wrap{display:flex;justify-content:flex-end;padding:6px 16px 0 0;margin-top:-25px;position:relative;z-index:10}'
+      + '.vcb-injected-wrap .vcp-popup{z-index:100}'
+      + '@media(max-width:480px){.vcb-injected-wrap{margin-top:-8px;padding:6px 12px 0 0}}';
   }
 
   // ── HTML builders ───────────────────────────────────────────────
@@ -211,6 +214,9 @@
 
   // ── Smart positioning ────────────────────────────────────────────
   function positionPopup(btn, popup, cfg) {
+    // On mobile, popup is fixed via CSS — skip JS positioning
+    if (window.innerWidth <= 480) return;
+
     var rect = btn.getBoundingClientRect();
     var spaceBelow = window.innerHeight - rect.bottom;
     var spaceAbove = rect.top;
@@ -229,6 +235,11 @@
     }
     popup.style.left = isRight ? 'auto' : '0';
     popup.style.right = isRight ? '0' : 'auto';
+
+    // Dynamic max-height for desktop: constrain to available space
+    var availableSpace = openAbove ? spaceAbove - 16 : spaceBelow - 16;
+    var constrainedHeight = Math.min(400, Math.max(200, availableSpace));
+    popup.style.maxHeight = constrainedHeight + 'px';
   }
 
   // ── Event wiring ────────────────────────────────────────────────
