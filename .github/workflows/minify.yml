@@ -25,7 +25,7 @@ jobs:
         run: |
           terser video-chapters.js \
             --compress --mangle \
-            --preamble "/* Video Chapters v1.1.2 | (c) Made by Dave Group Ltd | github.com/madebydaveorg/video-chapters */" \
+            --preamble "/* Video Chapters v1.1.4 | (c) Made by Dave Group Ltd | github.com/madebydaveorg/video-chapters */" \
             -o video-chapters.min.js
 
       - name: Commit minified file
