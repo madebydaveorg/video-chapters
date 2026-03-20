@@ -382,7 +382,7 @@
 
       // Wire events
       if (cfg.mode === 'popup') {
-        wirePopup(wrapper, l);
+        wirePopup(wrapper, cfg);
         wireChapters(wrapper, '.vcp-ch');
       } else {
         wireChapters(wrapper, '.chapter');
