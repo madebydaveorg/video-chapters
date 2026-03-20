@@ -1,0 +1,41 @@
+name: Minify JS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'video-chapters.js'
+
+jobs:
+  minify:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install Terser
+        run: npm install -g terser
+
+      - name: Minify
+        run: |
+          terser video-chapters.js \
+            --compress --mangle \
+            --preamble "/* Video Chapters v1.0.0 | (c) Made by Dave Group Ltd | github.com/madebydaveorg/video-chapters */" \
+            -o video-chapters.min.js
+
+      - name: Commit minified file
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add video-chapters.min.js
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: auto-minify video-chapters.js"
+            git push
+          fi
