@@ -106,7 +106,7 @@
       + '.vcp-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid ' + c.border + ';border-radius:6px;background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:' + c.title + ';' + fr + 'transition:background .15s}'
       + '.vcp-btn:hover{background:' + c.hover + '}'
       + '.vcp-btn:focus-visible{outline:2px solid ' + c.accent + ';outline-offset:2px}'
-      + '.vcp-popup{display:flex;flex-direction:column;position:absolute;top:calc(100% + 8px);right:0;width:' + cfg.popupWidth + 'px;max-width:calc(100vw - 24px);max-height:400px;overflow:hidden;background:#fff;border:1px solid ' + c.border + ';border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.12);z-index:9999;opacity:0;transform:scale(.96) translateY(-4px);pointer-events:none;transition:opacity .2s ease,transform .2s ease}'
+      + '.vcp-popup{display:flex;flex-direction:column;position:absolute;top:calc(100% + 8px);right:0;width:' + cfg.popupWidth + 'px;max-width:calc(100vw - 24px);max-height:400px;overflow:hidden;background:#fff;border:1px solid ' + c.border + ';border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.12);z-index:100;opacity:0;transform:scale(.96) translateY(-4px);pointer-events:none;transition:opacity .2s ease,transform .2s ease}'
       + '.vcp-popup.open{opacity:1;transform:scale(1) translateY(0);pointer-events:auto}'
       + '.vcp-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:.5px solid rgba(128,128,128,.15);flex-shrink:0;background:#fff;border-radius:10px 10px 0 0}'
       + '.vcp-header h4{margin:0;font-size:' + cfg.headingSize + ';color:' + c.title + '}'
@@ -123,7 +123,7 @@
       + '.vcp-info{display:flex;flex-direction:column;gap:1px}'
       + '.vcp-title{font-weight:600;font-size:13px;color:' + c.title + '}'
       + '.vcp-desc{font-size:' + cfg.descSize + ';color:' + c.desc + ';line-height:1.4}'
-      + '@media(max-width:480px){.vcp-popup{position:fixed!important;bottom:0!important;top:auto!important;left:0!important;right:0!important;width:100vw!important;max-width:100vw!important;max-height:60vh!important;border-radius:12px 12px 0 0!important;box-shadow:0 -4px 30px rgba(0,0,0,.15);transform:translateY(100%)!important;opacity:1!important;transition:transform .3s cubic-bezier(.32,.72,0,1)!important}.vcp-popup.open{transform:translateY(0)!important}.vcp-ch{padding:10px 6px}}';
+      + '@media(max-width:480px){.vcp-popup{position:fixed!important;bottom:0!important;top:auto!important;left:0!important;right:0!important;width:100vw!important;max-width:100vw!important;max-height:60vh!important;overflow-y:auto!important;border-radius:12px 12px 0 0!important;box-shadow:0 -4px 30px rgba(0,0,0,.15);transform:translateY(100%)!important;opacity:1!important;transition:transform .3s cubic-bezier(.32,.72,0,1)!important;z-index:100!important}.vcp-popup.open{transform:translateY(0)!important}.vcp-ch{padding:10px 6px}}';
   }
 
   function buildInlineCSS(c, cfg) {
@@ -157,7 +157,7 @@
       return '.vcb-video-container{position:relative}'
         + '.vcb-injected-wrap{position:absolute;bottom:48px;right:12px;z-index:10;opacity:0;transition:opacity .25s;pointer-events:none}'
         + '.vcb-video-container:hover .vcb-injected-wrap,.vcb-injected-wrap.vcb-pinned{opacity:1;pointer-events:auto}'
-        + '.vcb-injected-wrap .vcp-popup{z-index:9999}'
+        + '.vcb-injected-wrap .vcp-popup{z-index:100}'
         + '.vcb-injected-wrap .vcp-btn{background:rgba(0,0,0,.65);color:#fff;border-color:rgba(255,255,255,.2);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}'
         + '.vcb-injected-wrap .vcp-btn:hover{background:rgba(0,0,0,.8)}'
         + '.vcb-injected-wrap .vcp-btn svg rect{fill:#fff}';
@@ -252,7 +252,7 @@
     // Mobile backdrop overlay
     var backdrop = document.createElement('div');
     backdrop.className = 'vcp-backdrop';
-    backdrop.style.cssText = 'display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.3);z-index:9998;opacity:0;transition:opacity .3s ease';
+    backdrop.style.cssText = 'display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.3);z-index:99;opacity:0;transition:opacity .3s ease';
     document.body.appendChild(backdrop);
 
     function openPopup() {
