@@ -1,5 +1,5 @@
 /**
- * Video Chapters v1.1.0 – lightweight runtime
+ * Video Chapters v1.1.1 – lightweight runtime
  * (c) Made by Dave Group Ltd
  * https://github.com/madebydave/video-chapters
  *
@@ -163,7 +163,7 @@
     return '.course-item{overflow:visible!important}'
       + '.course-item__lesson-content{overflow:visible!important}'
       + '.content-wrapper{overflow:visible!important}'
-      + '.vcb-injected-wrap{display:flex;justify-content:flex-end;padding:6px 16px 0 0;margin-top:-12px;position:relative;z-index:999999!important}'
+      + '.vcb-injected-wrap{display:flex;justify-content:flex-end;padding:6px 16px 0 0;margin-top:-25px;position:relative;z-index:999999!important}'
       + '.vcb-injected-wrap .vcp-popup{z-index:999999}';
   }
 
