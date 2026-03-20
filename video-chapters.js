@@ -1,5 +1,5 @@
 /**
- * Video Chapters v1.1.4 – lightweight runtime
+ * Video Chapters v1.1.5 – lightweight runtime
  * (c) Made by Dave Group Ltd
  * https://github.com/madebydave/video-chapters
  *
@@ -37,6 +37,7 @@
     showPlayIcon: true,
     showDescriptions: true,
     font: '',
+    animation: 'smooth',   // 'none' | 'subtle' | 'smooth' | 'dramatic'
     chapters: [],
     colors: {
       accent: 'hsl(0,0%,20%)',
@@ -94,23 +95,28 @@
 
   function buildPopupCSS(c, cfg) {
     var fi = fontImport(cfg.font), fr = fontRule(cfg.font);
-    var posMap = {
-      'top-left': 'bottom:calc(100% + 8px);left:0;',
-      'top-right': 'bottom:calc(100% + 8px);right:0;',
-      'bottom-left': 'top:calc(100% + 8px);left:0;',
-      'bottom-right': 'top:calc(100% + 8px);right:0;'
+    var anim = cfg.animation || 'smooth';
+
+    // Animation presets: [duration, scale, translateY, easing, iconRotation, mobileEasing, mobileDuration]
+    var animMap = {
+      'none':     { dur: '0s',   scale: '1',   ty: '0',    ease: 'linear',                              iconDeg: '0',    mDur: '0s',   mEase: 'linear' },
+      'subtle':   { dur: '.15s', scale: '.98',  ty: '-2px', ease: 'ease',                                iconDeg: '45deg', mDur: '.2s',  mEase: 'ease-out' },
+      'smooth':   { dur: '.2s',  scale: '.96',  ty: '-4px', ease: 'ease',                                iconDeg: '90deg', mDur: '.3s',  mEase: 'cubic-bezier(.32,.72,0,1)' },
+      'dramatic': { dur: '.35s', scale: '.9',   ty: '-8px', ease: 'cubic-bezier(.34,1.56,.64,1)', iconDeg: '180deg', mDur: '.4s', mEase: 'cubic-bezier(.34,1.56,.64,1)' }
     };
-    // Position is set dynamically by positionPopup() on open — CSS just sets a default
+    var a = animMap[anim] || animMap['smooth'];
+    var noAnim = anim === 'none';
+
     return fi
       + '.vcp-wrap{position:relative;display:inline-block;' + fr + '}'
       + '.vcp-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border:1px solid ' + c.border + ';border-radius:6px;background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:' + c.title + ';' + fr + 'transition:background .15s,transform .15s ease,box-shadow .15s ease}'
       + '.vcp-btn:hover{background:' + c.hover + ';box-shadow:0 2px 8px rgba(0,0,0,.08)}'
-      + '.vcp-btn:active{transform:scale(.95)}'
+      + (noAnim ? '' : '.vcp-btn:active{transform:scale(.95)}')
       + '.vcp-btn.vcp-open{background:' + c.hover + ';box-shadow:0 1px 4px rgba(0,0,0,.1)}'
-      + '.vcp-btn .vcp-icon{transition:transform .3s cubic-bezier(.32,.72,0,1)}'
-      + '.vcp-btn.vcp-open .vcp-icon{transform:rotate(90deg)}'
+      + '.vcp-btn .vcp-icon{display:inline-flex;transition:transform ' + a.dur + ' ' + a.ease + '}'
+      + '.vcp-btn.vcp-open .vcp-icon{transform:rotate(' + a.iconDeg + ')}'
       + '.vcp-btn:focus-visible{outline:2px solid ' + c.accent + ';outline-offset:2px}'
-      + '.vcp-popup{display:flex;flex-direction:column;position:absolute;top:calc(100% + 8px);right:0;width:' + cfg.popupWidth + 'px;max-width:calc(100vw - 24px);max-height:400px;overflow:hidden;background:#fff;border:1px solid ' + c.border + ';border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.12);z-index:100;opacity:0;transform:scale(.96) translateY(-4px);pointer-events:none;transition:opacity .2s ease,transform .2s ease}'
+      + '.vcp-popup{display:flex;flex-direction:column;position:absolute;top:calc(100% + 8px);right:0;width:' + cfg.popupWidth + 'px;max-width:calc(100vw - 24px);max-height:400px;overflow:hidden;background:#fff;border:1px solid ' + c.border + ';border-radius:10px;box-shadow:0 8px 30px rgba(0,0,0,.12);z-index:100;opacity:0;transform:scale(' + a.scale + ') translateY(' + a.ty + ');pointer-events:none;transition:opacity ' + a.dur + ' ' + a.ease + ',transform ' + a.dur + ' ' + a.ease + '}'
       + '.vcp-popup.open{opacity:1;transform:scale(1) translateY(0);pointer-events:auto}'
       + '.vcp-header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:.5px solid rgba(128,128,128,.15);flex-shrink:0;background:#fff;border-radius:10px 10px 0 0}'
       + '.vcp-header h4{margin:0;font-size:' + cfg.headingSize + ';color:' + c.title + '}'
@@ -127,7 +133,7 @@
       + '.vcp-info{display:flex;flex-direction:column;gap:1px}'
       + '.vcp-title{font-weight:600;font-size:13px;color:' + c.title + '}'
       + '.vcp-desc{font-size:' + cfg.descSize + ';color:' + c.desc + ';line-height:1.4}'
-      + '@media(max-width:480px){.vcp-popup{position:fixed!important;bottom:0!important;top:auto!important;left:0!important;right:0!important;width:100vw!important;max-width:100vw!important;max-height:60vh!important;overflow-y:auto!important;border-radius:12px 12px 0 0!important;box-shadow:0 -4px 30px rgba(0,0,0,.15);transform:translateY(100%)!important;opacity:1!important;transition:transform .3s cubic-bezier(.32,.72,0,1)!important;z-index:100!important}.vcp-popup.open{transform:translateY(0)!important}.vcp-ch{padding:10px 6px}}';
+      + '@media(max-width:480px){.vcp-popup{position:fixed!important;bottom:0!important;top:auto!important;left:0!important;right:0!important;width:100vw!important;max-width:100vw!important;height:auto!important;max-height:60vh!important;overflow-y:auto!important;border-radius:12px 12px 0 0!important;box-shadow:0 -4px 30px rgba(0,0,0,.15)!important;transform:translateY(100%)!important;opacity:1!important;pointer-events:none!important;transition:transform ' + a.mDur + ' ' + a.mEase + '!important;z-index:100!important}.vcp-popup.open{transform:translateY(0)!important;pointer-events:auto!important}.vcp-list{max-height:calc(60vh - 56px)!important;overflow-y:auto!important}.vcp-ch{padding:10px 6px}}';
   }
 
   function buildInlineCSS(c, cfg) {
