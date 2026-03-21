@@ -179,7 +179,7 @@
       + '.content-wrapper{overflow:visible!important}'
       + '.vcb-injected-wrap{display:flex;justify-content:flex-end;padding:6px 16px 0 0;margin-top:-25px;position:relative;z-index:10}'
       + '.vcb-injected-wrap .vcp-popup{z-index:100}'
-      + '@media(max-width:480px){.course-item{gap:0!important}.course-item__video-container{margin-bottom:0!important;padding-bottom:0!important}.course-item__lesson-content{padding-top:0!important;padding-right:140px!important}.vcb-injected-wrap{margin-top:-8px;padding:4px 12px 0 0}}';
+      + '@media(max-width:480px){.vcb-injected-wrap{margin-top:-8px;padding:4px 12px 0 0}}';
   }
 
   // ── HTML builders ───────────────────────────────────────────────
