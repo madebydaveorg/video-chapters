@@ -1,5 +1,5 @@
 /**
- * Video Chapters v1.1.5 – lightweight runtime
+ * Video Chapters v1.1.6 – lightweight runtime
  * (c) Made by Dave Group Ltd
  * https://github.com/madebydave/video-chapters
  *
@@ -133,9 +133,7 @@
       + '.vcp-info{display:flex;flex-direction:column;gap:1px}'
       + '.vcp-title{font-weight:600;font-size:13px;color:' + c.title + '}'
       + '.vcp-desc{font-size:' + cfg.descSize + ';color:' + c.desc + ';line-height:1.4}'
-      + '@keyframes vcpSlideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}'
-      + '@keyframes vcpFadeIn{from{opacity:0}to{opacity:1}}'
-      + '@media(max-width:480px){.vcp-popup{display:none!important;position:fixed!important;bottom:0!important;top:auto!important;left:0!important;right:0!important;width:100vw!important;max-width:100vw!important;height:auto!important;max-height:60vh!important;overflow:hidden!important;border-radius:12px 12px 0 0!important;box-shadow:0 -4px 30px rgba(0,0,0,.15)!important;opacity:1!important;transform:none!important;z-index:100!important;transition:none!important}.vcp-popup.open{display:flex!important;flex-direction:column!important;animation:vcpSlideUp ' + a.mDur + ' ' + a.mEase + ' both!important}.vcp-list{max-height:calc(60vh - 56px)!important;overflow-y:auto!important}.vcp-ch{padding:10px 6px}}';
+      + '@media(max-width:480px){.vcp-popup{display:none!important;position:fixed!important;bottom:0!important;top:auto!important;left:0!important;right:0!important;width:100vw!important;max-width:100vw!important;height:auto!important;max-height:60vh!important;overflow:hidden!important;border-radius:12px 12px 0 0!important;box-shadow:0 -4px 30px rgba(0,0,0,.15)!important;opacity:1!important;transform:none!important;z-index:100!important;transition:none!important;animation:none!important}.vcp-popup.open{display:flex!important;flex-direction:column!important}.vcp-list{max-height:calc(60vh - 56px)!important;overflow-y:auto!important}.vcp-ch{padding:10px 6px}}';
   }
 
   function buildInlineCSS(c, cfg) {
@@ -282,8 +280,12 @@
       popup.classList.remove('open');
       btn.classList.remove('vcp-open');
       btn.setAttribute('aria-expanded', 'false');
-      backdrop.style.opacity = '0';
-      setTimeout(function() { backdrop.style.display = 'none'; }, 300);
+      if (window.innerWidth <= 480) {
+        backdrop.style.opacity = '0';
+        backdrop.style.display = 'none';
+      } else {
+        popup.style.maxHeight = '';
+      }
     }
 
     btn.addEventListener('click', function () {
